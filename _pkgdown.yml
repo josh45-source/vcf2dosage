@@ -1,0 +1,48 @@
+url: https://josh45-source.github.io/vcf2dosage/
+
+template:
+  bootstrap: 5
+
+reference:
+  - title: "Main Function"
+    desc: Convert VCF to dosage in one call.
+    contents:
+      - vcf2dosage
+
+  - title: "Reading & Parsing"
+    desc: Read VCF files and extract genotype data.
+    contents:
+      - read_vcf
+      - extract_gt
+      - gt_to_dosage
+      - detect_ploidy
+
+  - title: "Filtering"
+    desc: Filter variants and samples by quality metrics.
+    contents:
+      - filter_maf
+      - filter_missingness
+      - filter_samples
+      - variant_summary
+
+  - title: "Export"
+    desc: Export dosage matrices for GS and GWAS packages.
+    contents:
+      - export_rrblup
+      - export_gwaspoly
+      - export_bglr
+      - export_sommer
+      - export_marker_map
+
+  - title: "Utilities"
+    contents:
+      - create_example_vcf
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    github:
+      icon: fa-github
+      href: https://github.com/josh45-source/vcf2dosage

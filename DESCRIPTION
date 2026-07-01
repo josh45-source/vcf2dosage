@@ -1,0 +1,39 @@
+Package: vcf2dosage
+Title: Polyploid-Aware VCF to Dosage Matrix Conversion for Genomic Selection
+Version: 0.1.0
+Authors@R: 
+    person("Joash Joshua", "Ayo", , "joash.ayo@example.com", role = c("aut", "cre"))
+Description: Converts Variant Call Format (VCF) files to numeric allele dosage 
+    matrices ready for genomic selection and genome-wide association studies. 
+    Handles diploid and polyploid species (tetraploid, hexaploid, and arbitrary 
+    ploidy), filters variants by minor allele frequency, missingness, and read 
+    depth, and exports dosage matrices in formats compatible with 'rrBLUP', 
+    'GWASpoly', 'BGLR', 'sommer', and 'AGHmatrix'. Supports both unphased 
+    (0/0/1/1) and phased (0|0|1|1) genotype calls.
+License: MIT + file LICENSE
+URL: https://github.com/josh45-source/vcf2dosage
+BugReports: https://github.com/josh45-source/vcf2dosage/issues
+Depends:
+    R (>= 4.1.0)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: 
+    cli (>= 3.6.0),
+    data.table (>= 1.14.0),
+    dplyr (>= 1.1.0),
+    glue (>= 1.6.0),
+    purrr (>= 1.0.0),
+    rlang (>= 1.1.0),
+    stats,
+    tibble (>= 3.2.0),
+    utils
+Suggests: 
+    ggplot2,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    viridis,
+    withr
+Config/testthat/edition: 3
+VignetteBuilder: knitr

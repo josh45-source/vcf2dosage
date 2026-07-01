@@ -1,0 +1,123 @@
+---
+title: "Getting Started with vcf2dosage"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with vcf2dosage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", eval = FALSE)
+```
+
+## Overview
+
+vcf2dosage converts VCF files into numeric dosage matrices ready for
+genomic selection (GS) and genome-wide association studies (GWAS). It
+handles diploid and polyploid species with automatic ploidy detection.
+
+## Basic Usage
+
+```{r basic}
+library(vcf2dosage)
+
+# One function does everything
+result <- vcf2dosage("my_genotypes.vcf.gz")
+# Step 1: Reading VCF
+# > Read 15,234 variants x 384 samples
+# Step 2: Extracting genotype calls
+# Step 3: Detecting ploidy
+# > Detected ploidy: 2
+# Step 4: Converting to dosage
+# Step 5: Filtering
+# > MAF filter (>= 0.05): removed 1,847/15,234 variants
+# > Missingness filter (<= 20%): removed 312/15,234 variants
+# Done
+# > Final: 13,075 variants x 384 samples (ploidy = 2)
+
+# The result contains everything you need
+dim(result$dosage) # variants x samples
+dim(result$dosage_t) # samples x markers (for GS)
+head(result$map) # marker positions
+```
+
+## Polyploid Species
+
+```{r polyploid}
+# Tetraploid potato
+result <- vcf2dosage("potato.vcf.gz", ploidy = 4)
+# Dosage values: 0, 1, 2, 3, or 4
+
+# Hexaploid wheat
+result <- vcf2dosage("wheat.vcf.gz", ploidy = 6)
+# Dosage values: 0, 1, 2, 3, 4, 5, or 6
+
+# Auto-detect ploidy
+result <- vcf2dosage("unknown.vcf.gz")
+result$ploidy
+```
+
+## Custom Filtering
+
+```{r filtering}
+result <- vcf2dosage(
+  "genotypes.vcf.gz",
+  min_maf = 0.01, # Keep rarer variants
+  max_missing_variant = 0.1, # Stricter: max 10% missing
+  max_missing_sample = 0.3 # Remove samples with >30% missing
+)
+
+# Check what was removed
+result$filter_summary
+```
+
+## Export for GS Packages
+
+```{r export}
+# rrBLUP: centered dosage matrix
+Z <- export_rrblup(result$dosage)
+# library(rrBLUP)
+# fit <- mixed.solve(y = pheno$yield, Z = Z)
+
+# GWASpoly: marker info + dosage
+geno <- export_gwaspoly(result$dosage, result$vcf$fix)
+# library(GWASpoly)
+# data <- read.GWASpoly(pheno.file, geno.file)
+
+# BGLR: imputed matrix for Bayesian models
+X <- export_bglr(result$dosage, impute = TRUE)
+# library(BGLR)
+# fit <- BGLR(y = pheno$yield, ETA = list(MRK = list(X = X, model = "BRR")))
+
+# sommer: genomic relationship matrix
+G <- export_sommer(result$dosage, as_relationship = TRUE)
+# library(sommer)
+# fit <- mmer(yield ~ 1, random = ~vsr(genotype, Gu = G), data = pheno)
+```
+
+## Step-by-Step Usage
+
+For more control, use the individual functions:
+
+```{r stepwise}
+# 1. Read VCF
+vcf <- read_vcf("genotypes.vcf.gz")
+
+# 2. Extract GT field
+gt <- extract_gt(vcf)
+
+# 3. Check ploidy
+ploidy <- detect_ploidy(gt)
+table(ploidy)
+
+# 4. Convert to dosage
+dosage <- gt_to_dosage(gt)
+
+# 5. Filter
+dosage <- filter_maf(dosage, maf = 0.05)$dosage
+dosage <- filter_missingness(dosage, max_missing = 0.2)$dosage
+
+# 6. Quality summary
+summary <- variant_summary(dosage, vcf$fix)
+```

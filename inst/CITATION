@@ -1,0 +1,8 @@
+bibentry(
+  bibtype  = "Manual",
+  title    = "vcf2dosage: Polyploid-Aware VCF to Dosage Matrix Conversion for Genomic Selection",
+  author   = person("Joash Joshua", "Ayo"),
+  year     = "2026",
+  note     = "R package version 0.1.0",
+  url      = "https://github.com/josh45-source/vcf2dosage"
+)
