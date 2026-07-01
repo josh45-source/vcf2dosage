@@ -38,6 +38,12 @@ reference:
     contents:
       - create_example_vcf
 
+  - title: "Print Methods"
+    desc: S3 print methods for vcf2dosage's data structures.
+    contents:
+      - print.vcf_data
+      - print.vcf2dosage_result
+
 navbar:
   structure:
     left: [intro, reference, articles, news]
