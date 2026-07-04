@@ -98,9 +98,9 @@ map <- export_marker_map(result$vcf$fix)
 
 vcf2dosage works alongside:
 
-- [brapiR2](https://github.com/josh45-source/brapiR2) — Pull genotype
+- [brapiR2](https://github.com/josh45-source/brapiR2) - Pull genotype
   data from BrAPI servers
-- [phenoQC](https://github.com/josh45-source/phenoQC) — Quality control
+- [phenoQC](https://github.com/josh45-source/phenoQC) - Quality control
   for phenotypic trial data
 
 Together: **retrieve** (brapiR2) -\> **clean** (phenoQC) -\> **prepare
